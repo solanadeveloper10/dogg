@@ -11,17 +11,18 @@ export const theme = createTheme({
       main: "#86de08",
     },
     background: {
-      default: "#000",
-      paper: "#faf6ef",
+      default: "#fff",
+      paper: "#fff",
     },
     text: {
-      primary: "#000",
-      secondary: "#000",
+      primary: "#473732",
+      secondary: "#473732",
     },
     divider: "#e0ddd4",
   },
   typography: {
-    fontFamily: "'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif",
+    fontFamily:
+      "'SegoePrint', 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif",
     h1: { fontSize: "3rem", fontWeight: 700 },
     h2: { fontSize: "2.5rem", fontWeight: 600 },
     h3: { fontSize: "2rem", fontWeight: 500 },
