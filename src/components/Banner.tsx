@@ -1,195 +1,273 @@
 import React from "react";
 import {
   Box,
-  Container,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
   Typography,
-  styled,
   useMediaQuery,
-  type Theme,
 } from "@mui/material";
-import { useInView } from "react-intersection-observer";
-
-interface SectionProps {
-  title: string;
-  icon?: string;
-  index: number;
-  href?: string;
-}
-
-const FullSection = styled(Box)({
-  height: "50vh",
-  width: "100%",
-  display: "flex",
-  alignItems: "center",
-  backgroundColor: "#ffffff",
-  justifyContent: "start",
-  overflow: "hidden",
-});
-
-const ContentWrapper = styled("a")<{ inview: number; index: number }>(
-  ({ inview, index }) => ({
-    textDecoration: "none",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "20px",
-    padding: "20px",
-    cursor: "pointer",
-    transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
-    transform: inview
-      ? "translate(0, 0)"
-      : index === 5
-      ? `translate(0, 200%)`
-      : `translate(${index % 2 === 0 ? "-50%" : "50%"}, 50%) `,
-    opacity: inview ? 1 : 0,
-    willChange: "transform, opacity",
-    "&:hover": {
-      "& img": {
-        transform: "scale(1.1)",
-      },
-      "& h4": {
-        color: "#000000",
-      },
-    },
-  })
-);
-
-const Section: React.FC<SectionProps> = ({ title, icon, index, href }) => {
-  const { ref, inView } = useInView({
-    threshold: 0.2,
-    triggerOnce: false,
-    rootMargin: "50px",
-  });
-
-  const isMobile = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down("md")
-  );
-
-  return (
-    <Container sx={{ backgroundColor: "#fff", overflow: "hidden" }}>
-      <FullSection
-        sx={{
-          justifyContent:
-            index >= 4 ? "center" : index % 2 === 0 ? "start" : "end",
-        }}
-      >
-        <ContentWrapper
-          ref={ref}
-          inview={inView ? 1 : 0}
-          href={href}
-          target='_blank'
-          index={index}
-          onClick={(e) => {
-            if (index === 5) {
-              window.navigator.clipboard.writeText(
-                "7Yn7m5noMaMq8jLjRXNBLw8EEw7WPehJRJZm6szRpump"
-              );
-              const target = e.currentTarget;
-              target.style.transform = "scale(0.6)";
-              target.style.transition = "transform 0.3s ease-in";
-
-              setTimeout(() => {
-                target.style.transform = "scale(1.25)";
-                target.style.transition = "transform 0.3s ease-out";
-
-                setTimeout(() => {
-                  target.style.transform = "scale(1)";
-                  target.style.transition = "transform 0.3s ease-out";
-                }, 300);
-              }, 300);
-            }
-          }}
-        >
-          <Box
-            display='flex'
-            alignItems='center'
-            justifyContent='center'
-            gap={3}
-            flexDirection={index % 2 === 1 ? "row-reverse" : "initial"}
-          >
-            {icon && (
-              <img
-                src={icon}
-                alt={title}
-                style={{
-                  height: isMobile ? "200px" : "300px",
-                  objectFit: "contain",
-                  transition: "transform 0.3s ease-in-out",
-                }}
-              />
-            )}
-            <Typography
-              variant='h1'
-              sx={{
-                fontWeight: 900,
-                "-webkit-text-stroke": "3px #473732",
-                color: "#473732",
-                transition: "color 0.3s ease-in-out",
-                fontSize: isMobile ? "1.8rem" : index === 5 ? "2rem" : "3rem",
-                wordBreak: "break-word",
-              }}
-            >
-              {title}
-            </Typography>
-          </Box>
-        </ContentWrapper>
-      </FullSection>
-    </Container>
-  );
-};
-
-const sections = [
-  {
-    title: "Dexscreener",
-    icon: "/3.png",
-    href: "https://dexscreener.com/solana/7Yn7m5noMaMq8jLjRXNBLw8EEw7WPehJRJZm6szRpump",
-  },
-  {
-    title: "Dextools",
-    icon: "/1.png",
-    href: "https://www.dextools.io/app/en/solana/pair-explorer/3mTiHk798Z1BGBJKw95Qr99LG6J24JMagxRcSFRMrbfN?t=1750152508976",
-  },
-  { title: "Telegram", icon: "/2.png", href: "https://t.me/nig_cto" },
-  { title: "Twitter", icon: "/5.png", href: "https://x.com/nig_cto" },
-  {
-    title: "Buy Now",
-    icon: "/4.png",
-    href: "https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=7Yn7m5noMaMq8jLjRXNBLw8EEw7WPehJRJZm6szRpump",
-  },
-  { title: "CA: 7Yn7m5noMaMq8jLjRXNBLw8EEw7WPehJRJZm6szRpump" },
-];
+import MenuIcon from "@mui/icons-material/Menu";
 
 const Banner: React.FC = () => {
-  const isMobile = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down("md")
-  );
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Box>
       <Box
-        height='100vh'
+        height={80}
+        display='flex'
+        justifyContent={{ xs: "end", md: "space-around" }}
+        alignItems='center'
+        sx={{ background: "linear-gradient(90deg, #1e3c72 0%, #2a5298 100%)" }}
+        px={2}
+      >
+        {isMobile ? (
+          <>
+            <IconButton
+              color='inherit'
+              onClick={handleMenuOpen}
+              sx={{
+                background: "#fff",
+                color: "#1e3c72",
+                borderRadius: "30px",
+                mx: 1,
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+              transformOrigin={{ vertical: "top", horizontal: "left" }}
+            >
+              <MenuItem onClick={handleMenuClose}>
+                <Button
+                  variant='contained'
+                  fullWidth
+                  sx={{
+                    background: "#fff",
+                    color: "#1e3c72",
+                    borderRadius: "30px",
+                    boxShadow: "0 4px 20px 0 rgba(30,60,114,0.15)",
+                    fontWeight: 600,
+                    fontSize: "1rem",
+                    px: 4,
+                    mx: 1,
+                    transition: "all 0.3s",
+                    "&:hover": {
+                      background: "#e3e9f7",
+                      color: "#2a5298",
+                      boxShadow: "0 6px 24px 0 rgba(30,60,114,0.25)",
+                    },
+                  }}
+                >
+                  Telegram
+                </Button>
+              </MenuItem>
+              <MenuItem onClick={handleMenuClose}>
+                <Button
+                  variant='contained'
+                  fullWidth
+                  sx={{
+                    background: "#fff",
+                    color: "#1e3c72",
+                    borderRadius: "30px",
+                    boxShadow: "0 4px 20px 0 rgba(30,60,114,0.15)",
+                    fontWeight: 600,
+                    fontSize: "1rem",
+                    px: 4,
+                    mx: 1,
+                    transition: "all 0.3s",
+                    "&:hover": {
+                      background: "#e3e9f7",
+                      color: "#2a5298",
+                      boxShadow: "0 6px 24px 0 rgba(30,60,114,0.25)",
+                    },
+                  }}
+                >
+                  Twitter
+                </Button>
+              </MenuItem>
+              <MenuItem onClick={handleMenuClose}>
+                <Button
+                  variant='contained'
+                  fullWidth
+                  sx={{
+                    background: "#fff",
+                    color: "#1e3c72",
+                    borderRadius: "30px",
+                    boxShadow: "0 4px 20px 0 rgba(30,60,114,0.15)",
+                    fontWeight: 600,
+                    fontSize: "1rem",
+                    px: 4,
+                    mx: 1,
+                    transition: "all 0.3s",
+                    "&:hover": {
+                      background: "#e3e9f7",
+                      color: "#2a5298",
+                      boxShadow: "0 6px 24px 0 rgba(30,60,114,0.25)",
+                    },
+                  }}
+                >
+                  Dexscreener
+                </Button>
+              </MenuItem>
+              <MenuItem onClick={handleMenuClose}>
+                <Button
+                  variant='contained'
+                  fullWidth
+                  sx={{
+                    background: "#fff",
+                    color: "#1e3c72",
+                    borderRadius: "30px",
+                    boxShadow: "0 4px 20px 0 rgba(30,60,114,0.15)",
+                    fontWeight: 600,
+                    fontSize: "1rem",
+                    px: 4,
+                    mx: 1,
+                    transition: "all 0.3s",
+                    "&:hover": {
+                      background: "#e3e9f7",
+                      color: "#2a5298",
+                      boxShadow: "0 6px 24px 0 rgba(30,60,114,0.25)",
+                    },
+                  }}
+                >
+                  Dextools
+                </Button>
+              </MenuItem>
+            </Menu>
+          </>
+        ) : (
+          <>
+            <Button
+              variant='contained'
+              sx={{
+                background: "#fff",
+                color: "#1e3c72",
+                borderRadius: "30px",
+                boxShadow: "0 4px 20px 0 rgba(30,60,114,0.15)",
+                fontWeight: 600,
+                fontSize: "1rem",
+                px: 4,
+                mx: 1,
+                transition: "all 0.3s",
+                "&:hover": {
+                  background: "#e3e9f7",
+                  color: "#2a5298",
+                  boxShadow: "0 6px 24px 0 rgba(30,60,114,0.25)",
+                },
+              }}
+            >
+              Telegram
+            </Button>
+            <Button
+              variant='contained'
+              sx={{
+                background: "#fff",
+                color: "#1e3c72",
+                borderRadius: "30px",
+                boxShadow: "0 4px 20px 0 rgba(30,60,114,0.15)",
+                fontWeight: 600,
+                fontSize: "1rem",
+                px: 4,
+                mx: 1,
+                transition: "all 0.3s",
+                "&:hover": {
+                  background: "#e3e9f7",
+                  color: "#2a5298",
+                  boxShadow: "0 6px 24px 0 rgba(30,60,114,0.25)",
+                },
+              }}
+            >
+              Twitter
+            </Button>
+            <Button
+              variant='contained'
+              sx={{
+                background: "#fff",
+                color: "#1e3c72",
+                borderRadius: "30px",
+                boxShadow: "0 4px 20px 0 rgba(30,60,114,0.15)",
+                fontWeight: 600,
+                fontSize: "1rem",
+                px: 4,
+                mx: 1,
+                transition: "all 0.3s",
+                "&:hover": {
+                  background: "#e3e9f7",
+                  color: "#2a5298",
+                  boxShadow: "0 6px 24px 0 rgba(30,60,114,0.25)",
+                },
+              }}
+            >
+              Dexscreener
+            </Button>
+            <Button
+              variant='contained'
+              sx={{
+                background: "#fff",
+                color: "#1e3c72",
+                borderRadius: "30px",
+                boxShadow: "0 4px 20px 0 rgba(30,60,114,0.15)",
+                fontWeight: 600,
+                fontSize: "1rem",
+                px: 4,
+                mx: 1,
+                transition: "all 0.3s",
+                "&:hover": {
+                  background: "#e3e9f7",
+                  color: "#2a5298",
+                  boxShadow: "0 6px 24px 0 rgba(30,60,114,0.25)",
+                },
+              }}
+            >
+              Dextools
+            </Button>
+          </>
+        )}
+      </Box>
+      <Box
+        height='calc(100vh - 80px)'
         display='flex'
         alignItems='center'
         justifyContent='center'
-        sx={{ backgroundColor: "#fff" }}
       >
-        <video
-          src='/v1.mp4'
-          height={isMobile ? 350 : 500}
-          autoPlay
-          loop
-          muted
+        <Box
+          component='img'
+          src='/ramka.png'
+          position='relative'
+          sx={{ height: { xs: 400, md: 600 } }}
+        ></Box>
+        <Box
+          component='img'
+          src='/17.png'
+          sx={{ position: "absolute", height: { xs: 280, md: 400 } }}
         />
+        <Typography
+          variant='h3'
+          position='absolute'
+          sx={{
+            bottom: { xs: "calc(50% - 200px)", md: "calc(50% - 280px)" },
+            fontSize: { xs: 9, md: 14 },
+            fontWeight: "bold",
+            zIndex: 111,
+          }}
+        >
+          CA: DBnrkFbEiySXmqjquZtzyFSj5z75Kz1WhK71N9bdRjNF
+        </Typography>
       </Box>
-      {sections.map((section, index) => (
-        <Section
-          key={section.title}
-          title={section.title}
-          icon={section.icon}
-          index={index}
-          href={section.href}
-        />
-      ))}
     </Box>
   );
 };
